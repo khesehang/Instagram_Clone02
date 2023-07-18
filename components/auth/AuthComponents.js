@@ -1,5 +1,6 @@
 const UserModel = require('../../model/user_model');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const Register = async (req, res, next) => {
     var salt = bcrypt.genSaltSync(10)
@@ -37,8 +38,10 @@ const Login = async (req, res, next) => {
         if(!isMatched) {
             return res.json({msg: 'Username or Password not matched'})
         }
+
+        const token = jwt.sign({_id:user._id},process.env.JWT_SECRET_KEY)
         
-        return res.json(user)
+        return res.json({user,token})
 }
 
 module.exports = {
