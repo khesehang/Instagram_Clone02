@@ -19,6 +19,7 @@ const Register = async (req, res, next) => {
 }
 
 const Login = async (req, res, next) => {
+    try{
     const data = req.body
    const user = await  UserModel.findOne({
     $or: [
@@ -42,6 +43,10 @@ const Login = async (req, res, next) => {
         const token = jwt.sign({_id:user._id},process.env.JWT_SECRET_KEY)
         
         return res.json({user,token})
+    }
+    catch(err) {
+        return next(err)
+    }
 }
 
 module.exports = {
