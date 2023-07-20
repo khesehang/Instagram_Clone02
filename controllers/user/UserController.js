@@ -37,28 +37,6 @@ const updateUser = async (req, res, next) => {
         })
 }
 
-const removeUser = async (req, res, next) => {
-    try {
-        const userId = req.params.id
-
-        // validate the user ID  format before attempting to remove the user 
-        if (!isValidId(userId)) {
-            return res.status(400).json({ error: 'Invalid usr ID format' })
-        }
-
-        const deletedUser = await UserModel.findByIdAndDelete(userId)
-
-        // Check if the user with the given ID exists and was deleted successfully
-        if (!deletedUser) {
-            return res.status(404).json({ error: 'User not found' })
-        }
-        res.json({ message: "User removed successfully", deletedUser })
-
-    } catch (error) {
-        return next(error)
-    }
-
-}
 
 
 const searchUsers = async (req, res, next) => {
@@ -121,12 +99,10 @@ const unFollow = async (req, res, next) => {
         return next(error)
     }
 }
-// update profile pic
 
 module.exports = {
     getUser,
     updateUser,
-    removeUser,
     searchUsers,
     follow,
     unFollow

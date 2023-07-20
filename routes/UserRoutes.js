@@ -10,6 +10,5 @@ router.put('/follow',userVerify,follow)
 router.put('/unfollow',userVerify,unFollow)
 router.get('/:id',getUser)
 router.put('/:id',updateUser)
-router.delete('/:id',removeUser)
 
 module.exports = router;
