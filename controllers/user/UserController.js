@@ -3,7 +3,13 @@ const UserModel = require("../../model/user_model");
 const isValidId = require("../../utils/IdValidator");
 
 const getUser = async (req, res, next) => {
-    UserModel.findById(req.params.id)
+    const userId = req.params.id
+
+    // validate the user ID  format before attempting to remove the user 
+    if (!isValidId(userId)) {
+        return res.status(400).json({ error: 'Invalid usr ID format' })
+    }
+    UserModel.findById(userId)
         .then(user => {
             if (!user) return res.status(404).json({ msg: "User not found" });
             return res.json(user)
@@ -14,7 +20,13 @@ const getUser = async (req, res, next) => {
 }
 
 const updateUser = async (req, res, next) => {
-    UserModel.findByIdAndUpdate(req.params.id, {
+    const userId = req.params.id
+
+    // validate the user ID  format before attempting to remove the user 
+    if (!isValidId(userId)) {
+        return res.status(400).json({ error: 'Invalid usr ID format' })
+    }
+    UserModel.findByIdAndUpdate(userId, {
         $set: req.body
     }, { new: true })
         .then(user => {
@@ -45,18 +57,12 @@ const removeUser = async (req, res, next) => {
     } catch (error) {
         return next(error)
     }
-    // UserModel.findByIdAndDelete(req.params.id)
-    //     .then(result => {
-    //         res.send({ msg: 'User removed successfully' })
-    //     })
-    //     .catch(err => {
-    //         return next(err)
-    //     })
+
 }
 
 
 const searchUsers = async (req, res, next) => {
-   
+
 
 
     const emailPattern = new RegExp('^' + req.query.email, 'i'); // 'i' flag for case-insensitive search
@@ -68,18 +74,60 @@ const searchUsers = async (req, res, next) => {
         ]
     })
         .select('_id email username')
-    .then(users => {
-        res.json({ users });
-    })
-    .catch(err => {
-        console.error('Error searching for users:', err);
-        res.status(500).json({ error: 'An error occurred while searching for users.' });
-    });
+        .then(users => {
+            res.json({ users });
+        })
+        .catch(err => {
+            console.error('Error searching for users:', err);
+            res.status(500).json({ error: 'An error occurred while searching for users.' });
+        });
 }
+
+// TODOs
+
+// follow
+const follow = async (req, res, next) => {
+    const followId = req.body.followId
+    console.log('follwoid', followId)
+    try {
+        // update the user being followed {target user}
+        const targetUser = await UserModel.findByIdAndUpdate(followId, {
+            $push: { followers: req.user._id }
+        }, { new: true })
+
+        // Update the followers {req.user}
+        const followerUser = await UserModel.findByIdAndUpdate(req.user._id, {
+            $push: { following: followId }
+        }, { new: true })
+
+        res.json(followerUser)
+    } catch (error) {
+        return next(error)
+    }
+}
+// unfollow
+const unFollow = async (req, res, next) => {
+    const followId = req.body.followId
+    try {
+        const targetUser = await UserModel.findByIdAndUpdate(followId, {
+            $pull: { followers: req.user._id }
+        }, { new: true })
+
+        const followerUser= await UserModel.findByIdAndUpdate(req.user._id, {
+            $pull: {following: followId}
+        },{new : true})
+        res.json(followerUser)
+    } catch (error) {
+        return next(error)
+    }
+}
+// update profile pic
 
 module.exports = {
     getUser,
     updateUser,
     removeUser,
     searchUsers,
+    follow,
+    unFollow
 }
