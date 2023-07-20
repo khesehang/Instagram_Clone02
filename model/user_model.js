@@ -26,11 +26,6 @@ const userSchema = new Schema({
             ref: 'User'
         }
     ],
-    role: {   
-        type: String,
-        enum: ['user','vendor'],
-        default: 'user'
-    },
     likes: [
         {
             type: Schema.ObjectId,

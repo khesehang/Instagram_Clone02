@@ -7,7 +7,7 @@ dotenv.config();
 app.use(morgan('dev'))
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 require('./db_connect.js')
 
 app.use('/api',require('./API_ROUTES'))

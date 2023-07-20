@@ -21,7 +21,7 @@ const Register = async (req, res, next) => {
 const Login = async (req, res, next) => {
     try{
     const data = req.body
-   const user = await  UserModel.findOne({
+   const user = await UserModel.findOne({
     $or: [
         { username: data.username },
         { email: data.username },
@@ -34,8 +34,8 @@ const Login = async (req, res, next) => {
                 status: 400
             })
         }
-
-        isMatched = await bcrypt.compare(data.password,user.password)
+        console.log('user is',user)
+        isMatched = await  bcrypt.compare(data.password,user.password)
         if(!isMatched) {
             return res.json({msg: 'Username or Password not matched'})
         }
