@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+.css-rtboeg-MuiButtonBase-root-MuiButton-root.Mui-disabled {
+  color: #ffffff;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
