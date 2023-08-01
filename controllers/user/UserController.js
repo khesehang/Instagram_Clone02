@@ -6,9 +6,9 @@ const getUser = async (req, res, next) => {
     const userId = req.params.id
 
     // validate the user ID  format before attempting to remove the user 
-    if (!isValidId(userId)) {
-        return res.status(400).json({ error: 'Invalid usr ID format' })
-    }
+    // if (!isValidId(userId)) {
+    //     return res.status(400).json({ error: 'Invalid usr ID format' })
+    // }
     UserModel.findById(userId)
         .then(user => {
             if (!user) return res.status(404).json({ msg: "User not found" });
@@ -21,11 +21,11 @@ const getUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
     const userId = req.params.id
-
     // validate the user ID  format before attempting to remove the user 
-    if (!isValidId(userId)) {
-        return res.status(400).json({ error: 'Invalid usr ID format' })
-    }
+    // if (!isValidId(userId)) {
+    //     return res.status(400).json({ error: 'Invalid usr ID format' })
+    // }
+    console.log('user id', userId)
     UserModel.findByIdAndUpdate(userId, {
         $set: req.body
     }, { new: true })
@@ -91,9 +91,9 @@ const unFollow = async (req, res, next) => {
             $pull: { followers: req.user._id }
         }, { new: true })
 
-        const followerUser= await UserModel.findByIdAndUpdate(req.user._id, {
-            $pull: {following: followId}
-        },{new : true})
+        const followerUser = await UserModel.findByIdAndUpdate(req.user._id, {
+            $pull: { following: followId }
+        }, { new: true })
         res.json(followerUser)
     } catch (error) {
         return next(error)

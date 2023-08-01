@@ -19,32 +19,32 @@ const Register = async (req, res, next) => {
 }
 
 const Login = async (req, res, next) => {
-    try{
-    const data = req.body
-   const user = await UserModel.findOne({
-    $or: [
-        { username: data.username },
-        { email: data.username },
-    ]
-})
-    
-        if(!user) {
+    try {
+        const data = req.body
+        const user = await UserModel.findOne({
+            $or: [
+                { username: data.username },
+                { email: data.username },
+            ]
+        })
+
+        if (!user) {
             return next({
                 msg: 'Invalid username',
                 status: 400
             })
         }
-        console.log('user is',user)
-        isMatched = await  bcrypt.compare(data.password,user.password)
-        if(!isMatched) {
-            return res.json({msg: 'Username or Password not matched'})
+        console.log('user is', user)
+        isMatched = await bcrypt.compare(data.password, user.password)
+        if (!isMatched) {
+            return res.json({ msg: 'Username or Password not matched' })
         }
+        console.log('process is', process.env.JWT_SECRET_KEY)
+        const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET_KEY)
 
-        const token = jwt.sign({_id:user._id},process.env.JWT_SECRET_KEY)
-        
-        return res.json({user,token})
+        return res.json({ user, token })
     }
-    catch(err) {
+    catch (err) {
         return next(err)
     }
 }

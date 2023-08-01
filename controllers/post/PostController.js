@@ -1,9 +1,9 @@
 const { default: mongoose } = require("mongoose");
 const PostModel = require("../../model/post_model");
-const { json } = require("express");
 
 // createpost
 const createPost = async (req, res, next) => {
+    console.log('post requrest in post', req.body)
     const { content, pic } = req.body;
     const postedBy = req.user._id
 
