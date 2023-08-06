@@ -1,7 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
 
+.ReactCrop__crop-selection {
+  border-radius: 50%;
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+}
 
 .error {
   color: red;
   text-align: center;
+}
+
+.post-opa-div:hover .self-post-icon {
+  display: block;
 }

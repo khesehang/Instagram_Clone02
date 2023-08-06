@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {getAuthenticationToken} from './index'
+import { getAuthenticationToken } from './index'
 
 const BASE_API_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:5000/api'
 
@@ -15,10 +15,10 @@ let token;
 const getHeaders = (isSecured) => {
     token = getAuthenticationToken();
     let options = {
-        'content-type': 'application/json'
+        'Content-Type': 'application/json'
     }
     if (isSecured) {
-        options['Authentication'] = `Bearer ${token}`
+        options['Authorization'] = `Bearer ${token}`
     }
     return options;
 }

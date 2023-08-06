@@ -1,16 +1,24 @@
 import { Box, Grid, Stack, Typography } from '@mui/material'
-import React from 'react'
-import StorySlider from '../components/StorySlider'
+import React, { useEffect } from 'react'
 import PostCard from '../components/PostCard'
 import RightSide from '../components/RightSide'
 
 const Home = () => {
+
+  useEffect(() => {
+    document.title = 'Instagram'
+  },[])
+  
   return (
-    <Stack >
-      <Box sx={{ position: 'relative', maxWidth: '57%', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', backgroundColor: '' }} >
+    <div style={{
+      position: 'absolute', display: 'flex', justifyContent: 'center', alignItems: 'center',left:0
+    }} >
+      <Box sx={{
+        position: 'relative', maxWidth: '100%', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff'
+      }} >
         <PostCard />
       </Box>
-    </Stack>
+    </div >
   )
 }
 

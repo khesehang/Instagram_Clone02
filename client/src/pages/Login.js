@@ -2,7 +2,7 @@ import { Box, Button, Container, Input, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { Link, useNavigate } from 'react-router-dom';
-import { httpClient } from '../utils/httpClient';
+import  {httpClient}  from '../utils/httpClient';
 import { toast } from 'react-toastify';
 import { errorHandler } from '../service/errorHandler';
 
@@ -16,11 +16,13 @@ const Login = () => {
     const [isDisabled, setIsDisabled] = useState(true)
 
     const navigate = useNavigate()
-    const refresh = localStorage.getItem('token')
 
-    const handleChange = e => {
+    useEffect(() => {
+        setIsDisabled(!(formFields.username && formFields.password))
+    }, [formFields])
+
+    const handleChange = (e) => {
         const { name, value } = e.target
-        setIsDisabled(false)
         setFormFields({
             ...formFields,
             [name]: value
@@ -28,18 +30,28 @@ const Login = () => {
     }
 
 
-
-    const submit = e => {
-        httpClient.POST('/auth/login', formFields, true)
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        httpClient
+            .POST('/auth/login', formFields)
             .then((response) => {
-                localStorage.setItem('user', JSON.stringify(response.data.user))
-                localStorage.setItem('token', JSON.stringify(response.data.token))
-                toast.success(`Welcome ${response.data.user.fullname}`)
-                navigate('/')
-                window.location.reload()
+                const { user, token } = response.data;
+
+                // check is localStorage already contains user data
+                const storedData = JSON.parse(localStorage.getItem('user'));
+
+                // if storedData is an array, add the new user to it, otherwise initialize it as an array
+                const updatedData = Array.isArray(storedData) ? [...storedData, user] : [user];
+
+                localStorage.setItem('user', JSON.stringify(updatedData));
+                localStorage.setItem('token', JSON.stringify(token));
+                toast.success(`Welcome ${user.fullname}`);
+                navigate('/');
+                window.location.reload();
             })
             .catch(err => {
                 toast.error('Login Falied!')
+                console.log(err)
                 return errorHandler(err)
             })
     }
@@ -51,14 +63,14 @@ const Login = () => {
                     <Typography sx={{ margin: '45px 0', display: 'flex', justifyContent: 'center', fontSize: '33px', fontFamily: "'Pacifico', cursive" }}>
                         Instagram
                     </Typography>
+                    <form onSubmit={handleSubmit} >
+                        <Input type='email' name='username' placeholder='Username or email' onChange={handleChange} sx={{ fontSize: '14px', mb: '10px' }} />
+                        <Input type='password' name='password' placeholder='Password' onChange={handleChange} sx={{ fontSize: '14px', mb: '10px' }} />
+                        <Button type='submit' sx={{ mt: '20px', backgroundColor: "#4bb4f8", color: '#fff', boxShadow: 'none', borderRadius: '10px', '&:hover': { outline: 'none', boxShadow: 'none', backgroundColor: "#1876f2" } }} disabled={isDisabled}>
+                            <span style={{ color: 'white' }}>Log in</span>
+                        </Button>
 
-                    <Input type='email' name='username' placeholder='username, or email' onChange={handleChange} sx={{ fontSize: '14px', mb: '10px' }} />
-
-                    <Input type='password' name='password' placeholder='password' onChange={handleChange} sx={{ fontSize: '14px', mb: '10px' }} />
-
-                    <Button onClick={submit} sx={{ mt: '20px', backgroundColor: "#4bb4f8", color: '#fff', boxShadow: 'none', borderRadius: '10px', '&:hover': { outline: 'none', boxShadow: 'none', backgroundColor: "#1876f2" } }} disabled={isDisabled}>
-                        <span style={{ color: 'white' }}>Log in</span>
-                    </Button>
+                    </form>
 
                     <Box sx={{ mt: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px', fontSize: '13px', fontWeight: '700', color: '#828282' }}>
                         <Box sx={{ width: '110px', height: '1px', backgroundColor: '#dfdfdf', }} />

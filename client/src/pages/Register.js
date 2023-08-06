@@ -2,7 +2,7 @@ import { Box, Button, Container, Input, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import FacebookIcon from '@mui/icons-material/Facebook';
 import { Link, useNavigate } from 'react-router-dom';
-import { httpClient } from '../utils/httpClient';
+import {httpClient} from '../utils/httpClient';
 import { errorHandler } from '../service/errorHandler';
 import { toast } from 'react-toastify';
 
@@ -136,7 +136,7 @@ const Register = () => {
                     </Typography>
 
                     <Typography sx={{ width: '100%', fontSize: '12px', m: '10px 0', textAlign: 'center', color: '#909090' }}>By signing up, you agree to our
-                        <Link to='https://help.instagram.com/581066165581870/?locale=en_US' style={{ textDecoration: 'none', color: "#0095f6", color: '#00376b' }} target='_blank' > Terms , Privacy Policy and Cookies Policy . </Link>
+                        <Link to='https://help.instagram.com/581066165581870/?locale=en_US' style={{ textDecoration: 'none',color: '#00376b' }} target='_blank' > Terms , Privacy Policy and Cookies Policy . </Link>
                     </Typography>
 
                     <Button sx={{ mt: '10px', backgroundColor: "#4bb4f8", color: '#fff', boxShadow: 'none', borderRadius: '10px', '&:hover': { outline: 'none', boxShadow: 'none', backgroundColor: "#1876f2" } }} onClick={submit} disabled={isDisabled} >
